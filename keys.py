@@ -18,15 +18,6 @@ scancodes = {
     50: u'm', 51: u',', 52: u'.', 53: u'/', 54: u'RSHFT', 56: u'LALT', 57: u' ', 100: u'RALT'
 }
 
-capscodes = {
-    0: None, 1: u'ESC', 2: u'!', 3: u'@', 4: u'#', 5: u'$', 6: u'%', 7: u'^', 8: u'&', 9: u'*',
-    10: u'(', 11: u')', 12: u'_', 13: u'+', 14: u'BKSP', 15: u'TAB', 16: u'Q', 17: u'W', 18: u'E', 19: u'R',
-    20: u'T', 21: u'Y', 22: u'U', 23: u'I', 24: u'O', 25: u'P', 26: u'{', 27: u'}', 28: u'CRLF', 29: u'LCTRL',
-    30: u'A', 31: u'S', 32: u'D', 33: u'F', 34: u'G', 35: u'H', 36: u'J', 37: u'K', 38: u'L', 39: u':',
-    40: u'\'', 41: u'~', 42: u'LSHFT', 43: u'|', 44: u'Z', 45: u'X', 46: u'C', 47: u'V', 48: u'B', 49: u'N',
-    50: u'M', 51: u'<', 52: u'>', 53: u'?', 54: u'RSHFT', 56: u'LALT',  57: u' ', 100: u'RALT'
-}
-
 #grab provides exclusive access to the device
 dev.grab()
 
@@ -43,13 +34,9 @@ for event in dev.read_loop():
             if data.keystate == 0:
                 caps = False
         if data.keystate == 1:  # Down events only
-            if caps:
-                key_lookup = u'{}'.format(capscodes.get(data.scancode))
-            else:
-                key_lookup = u'{}'.format(scancodes.get(data.scancode))
+            key_lookup = u'{}'.format(scancodes.get(data.scancode))
 
             print key_lookup, data.scancode
-
 
             if len(key_lookup) == 1 :
                hidkey = ord(key_lookup) - 93 # a-z
@@ -58,9 +45,35 @@ for event in dev.read_loop():
 
             if data.scancode == 57: hidkey = 44 # space
             if data.scancode == 14: hidkey = 42 # bkspc
-            if data.scancode == 28: hidkey = 13 # enter
+            if data.scancode == 28: hidkey = 40 # enter
+            if data.scancode == 2: hidkey = 41 # ESC
+
+            if data.scancode == 106: hidkey = 79 # RIGHT
+            if data.scancode == 105: hidkey = 80 # LEFT
+            if data.scancode == 108: hidkey = 81 # DOWN
+            if data.scancode == 103: hidkey = 82 # UP
+
+            if data.scancode == 59: hidkey = 58 # F1
+            if data.scancode == 60: hidkey = 59 # F2
+            if data.scancode == 61: hidkey = 60 # F3
+            if data.scancode == 62: hidkey = 61 # F4
+            if data.scancode == 63: hidkey = 62 # F5
+            if data.scancode == 64: hidkey = 63 # F6
+            if data.scancode == 65: hidkey = 64 # F7
+            if data.scancode == 66: hidkey = 65 # F8
+            if data.scancode == 67: hidkey = 66 # F9
+            if data.scancode == 68: hidkey = 67 # F10
+            if data.scancode == 69: hidkey = 68 # F11
+            if data.scancode == 70: hidkey = 69 # F12
+
+
+            if data.scancode == 26: hidkey = 45 # -
 
             print key_lookup, data.scancode, hidkey
 
-            write_report(NULL_CHAR*2 + chr (hidkey) + NULL_CHAR*5)
+            if caps:
+                write_report(chr(32)+NULL_CHAR + chr (hidkey) + NULL_CHAR*5)
+            else:
+                write_report(NULL_CHAR*2 + chr (hidkey) + NULL_CHAR*5)
+
             write_report(NULL_CHAR*8)
