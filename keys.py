@@ -30,17 +30,37 @@ capscodes = {
 #grab provides exclusive access to the device
 dev.grab()
 
+caps= False;
+hidkey =0
+
 #loop
 for event in dev.read_loop():
     if event.type == ecodes.EV_KEY:
         data = categorize(event)
+        if data.scancode == 42:
+            if data.keystate == 1:
+                caps = True
+            if data.keystate == 0:
+                caps = False
         if data.keystate == 1:  # Down events only
-            key_lookup = u'{}'.format(scancodes.get(data.scancode))
+            if caps:
+                key_lookup = u'{}'.format(capscodes.get(data.scancode))
+            else:
+                key_lookup = u'{}'.format(scancodes.get(data.scancode))
 
-            #print key_lookup
+            print key_lookup, data.scancode
+
+
             if len(key_lookup) == 1 :
-               hidkey = ord(key_lookup) - 93
-               if hidkey < 0:
+               hidkey = ord(key_lookup) - 93 # a-z
+            if hidkey < 0: # 1-9
                    hidkey += 74
-               write_report(NULL_CHAR*2 + chr (hidkey) + NULL_CHAR*5)
-               write_report(NULL_CHAR*8)
+
+            if data.scancode == 57: hidkey = 44 # space
+            if data.scancode == 14: hidkey = 42 # bkspc
+            if data.scancode == 28: hidkey = 13 # enter
+
+            print key_lookup, data.scancode, hidkey
+
+            write_report(NULL_CHAR*2 + chr (hidkey) + NULL_CHAR*5)
+            write_report(NULL_CHAR*8)
