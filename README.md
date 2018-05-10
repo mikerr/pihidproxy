@@ -30,4 +30,4 @@ setuphid.sh - installs the USB keybaord driver
 
 keys.py - reads keyboard (e.g. bluetooth) and translates keycodes, then sends it over USB.
 
-*note* still work in progress - currently works but not all keycodes mapped.
+
