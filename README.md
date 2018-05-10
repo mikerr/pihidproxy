@@ -1,5 +1,6 @@
 # pihidproxy
 Bridge Bluetooth keyboard and mouse to USB (hid proxy)
+![](https://i.imgur.com/cpGkjXwm.png)
 
 If you have a bluetooth keyboard, you can't access BIOS or OS without a BT stack.
 This project acts as a bridge so the PC only sees a USB keyboard and so works without drivers.
